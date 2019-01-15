@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1027525267256",
+    "firebase_url": "https://note-taker-individual-study.firebaseio.com",
+    "project_id": "note-taker-individual-study",
+    "storage_bucket": "note-taker-individual-study.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027525267256:android:9e0eff0821f343ae",
+        "android_client_info": {
+          "package_name": "com.nikhilthota.notetaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027525267256-7pikiiks2dnt5lsp2fk72ego2rin2pit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nikhilthota.notetaker",
+            "certificate_hash": "fd48b90c5abd501f151b4d48638ce6db4bac8de5"
+          }
+        },
+        {
+          "client_id": "1027525267256-rieq8cdssackmbfo62aeeom4h4gvprdi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaYT2AztiguWECSwkooIhAzXupgNeEczA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027525267256-rieq8cdssackmbfo62aeeom4h4gvprdi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

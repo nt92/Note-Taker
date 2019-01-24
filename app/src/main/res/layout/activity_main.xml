@@ -1,9 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/note_text_content"
+        android:layout_width="109dp"
+        android:layout_height="40dp"
+        android:inputType="text"
+        android:autofillHints="Test"/>
+
+    <Button
+        android:id="@+id/save_note_button"
+        android:layout_width="61dp"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        tools:layout_editor_absoluteX="162dp"
+        tools:layout_editor_absoluteY="194dp" />
+</LinearLayout>

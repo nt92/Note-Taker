@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String email = "";
         if (extras != null) {
-            Log.v(TAG, "notnull");
             email = extras.getString("email");
         }
 

@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
     private void startMainActivity(GoogleSignInAccount account){
         Intent mainIntent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putParcelable("account", account);
+        bundle.putString("email", account.getEmail());
         mainIntent.putExtras(bundle);
         startActivity(mainIntent);
     }

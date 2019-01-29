@@ -19,4 +19,12 @@
         android:text="Save"
         tools:layout_editor_absoluteX="162dp"
         tools:layout_editor_absoluteY="194dp" />
+
+    <Button
+        android:id="@+id/view_all_notes_button"
+        android:layout_width="61dp"
+        android:layout_height="wrap_content"
+        android:text="Notes"
+        tools:layout_editor_absoluteX="162dp"
+        tools:layout_editor_absoluteY="194dp" />
 </LinearLayout>

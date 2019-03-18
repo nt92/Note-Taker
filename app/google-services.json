@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1027525267256:android:9e0eff0821f343ae",
+        "mobilesdk_app_id": "1:1027525267256:android:fbbe5fcf8a73d30b",
         "android_client_info": {
-          "package_name": "com.nikhilthota.notetaker"
+          "package_name": "com.nikhilthota.noteapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1027525267256-7pikiiks2dnt5lsp2fk72ego2rin2pit.apps.googleusercontent.com",
+          "client_id": "1027525267256-3lthe3l6nklgplrgn8k1phcllke85clk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.nikhilthota.notetaker",
+            "package_name": "com.nikhilthota.noteapp",
             "certificate_hash": "fd48b90c5abd501f151b4d48638ce6db4bac8de5"
           }
         },

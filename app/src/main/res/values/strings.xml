@@ -1,5 +1,14 @@
 <resources>
-    <string name="app_name">Note Taker</string>
+    <string name="app_name">Notes</string>
+    <string name="main_activity_name">All Notes</string>
+    <string name="add_task_activity_name">Create and Edit a Note</string>
+
+    <string name="edit_note_description">Enter your note&#8230;</string>
+
+    <string name="add_button">Save</string>
+    <string name="update_button">Update</string>
+    <string name="upload_button">Upload</string>
+    <string name="title_activity_login">Sign in</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -12,4 +21,5 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+
 </resources>

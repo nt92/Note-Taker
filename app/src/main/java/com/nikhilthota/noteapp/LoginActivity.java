@@ -1,4 +1,4 @@
-package com.nikhilthota.notetaker;
+package com.nikhilthota.noteapp;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -15,8 +14,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+
 /**
- * A login screen that offers login via Google
+ * A login screen that offers login via email/password or Google account
  */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = LoginActivity.class.getSimpleName();
@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        findViewById(R.id.google_sign_in_button).setOnClickListener(new OnClickListener() {
+        findViewById(R.id.google_sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         // the GoogleSignInAccount will be non-null.
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         if(account != null) {
-            Log.v(TAG, "Already Logged in");
+            Log.v(TAG, "Already Logged in" + account.getEmail());
             startMainActivity(account);
         }
     }
@@ -90,4 +90,3 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(mainIntent);
     }
 }
-

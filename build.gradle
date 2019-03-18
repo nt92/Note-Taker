@@ -1,10 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    
     repositories {
-        google()
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -16,9 +15,13 @@ buildscript {
 }
 
 allprojects {
+    String osName = System.getProperty("os.name").toLowerCase()
+    if (osName.contains("windows")) {
+        buildDir = "C:/tmp/${rootProject.name}/${project.name}"
+    }
     repositories {
-        google()
         jcenter()
+        google()
     }
 }
 

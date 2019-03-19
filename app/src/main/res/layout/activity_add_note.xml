@@ -15,15 +15,23 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <!-- EditText for getttaskEntrytask description input -->
+
     <EditText
-        android:id="@+id/editTextTaskDescription"
+        android:id="@+id/editTextNoteTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="start"
+        android:hint="@string/edit_note_title"
+        android:paddingBottom="@dimen/activity_horizontal_margin" />
+
+    <EditText
+        android:id="@+id/editTextNoteDescription"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         android:gravity="start"
         android:hint="@string/edit_note_description"
         android:paddingBottom="@dimen/activity_horizontal_margin" />
 
-    <!-- Add button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -47,8 +55,49 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@color/colorPrimary"
+            android:enabled="false"
             android:text="@string/upload_button"
             android:textColor="@android:color/primary_text_dark" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110dp"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/recordAndPlayButtons"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/recordButton"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:text="Record"
+                android:visibility="gone" />
+
+            <Button
+                android:id="@+id/playButton"
+                android:layout_width="75dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Play"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/uploadAudioButton"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:enabled="false"
+            android:text="Upload Recording" />
+
     </LinearLayout>
 
     <Button
@@ -60,5 +109,7 @@
         android:background="@color/colorPrimary"
         android:text="@string/add_button"
         android:textColor="@android:color/primary_text_dark" />
+
+    <!-- Add button -->
 
 </LinearLayout>

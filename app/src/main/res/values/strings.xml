@@ -4,6 +4,7 @@
     <string name="add_task_activity_name">Create and Edit a Note</string>
 
     <string name="edit_note_description">Enter your note&#8230;</string>
+    <string name="edit_note_title">Title your note&#8230;</string>
 
     <string name="add_button">Save</string>
     <string name="update_button">Update</string>

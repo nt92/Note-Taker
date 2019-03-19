@@ -45,7 +45,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
     // Date formatter
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
-    public NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options) {
+    NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options) {
         super(options);
     }
 
@@ -76,12 +76,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
         TextView noteDescriptionView;
         TextView updatedAtView;
 
-        /**
-         * Constructor for the NoteViewHolders.
-         *
-         * @param itemView The view inflated in onCreateViewHolder
-         */
-        public NoteHolder(View itemView) {
+        NoteHolder(View itemView) {
             super(itemView);
 
             noteDescriptionView = itemView.findViewById(R.id.taskDescription);
@@ -102,7 +97,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
         void onItemClick(DocumentSnapshot documentSnapshot, int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
+    void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 }

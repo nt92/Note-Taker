@@ -16,18 +16,26 @@
 
 package com.nikhilthota.noteapp;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -44,7 +52,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 
 
@@ -53,11 +63,27 @@ public class AddNoteActivity extends AppCompatActivity {
     static final String TAG = AddNoteActivity.class.getSimpleName();
     String mNoteId = "";
 
-    EditText mEditText;
+    //TODO make edit text larger and more dynamic
+    EditText mTitleText;
+    EditText mDescriptionText;
     Button mSaveButton;
     Button mUploadButton;
+    Button mAudioUploadButton;
     ImageView mImageView;
 
+    // Variables for audio recording
+    RecordButton recordButton;
+    MediaRecorder recorder;
+    PlayButton playButton;
+    MediaPlayer player;
+
+    // Requesting permission to RECORD_AUDIO
+    private boolean permissionToRecordAccepted = false;
+    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private String audioFileName;
+
+    // Firebase variables
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -71,6 +97,9 @@ public class AddNoteActivity extends AppCompatActivity {
             mSaveButton.setText(R.string.update_button);
             mNoteId = getIntent().getExtras().getString(EXTRA_NOTE_ID);
 
+            mUploadButton.setEnabled(true);
+            mAudioUploadButton.setEnabled(true);
+
             // Get data from the existing document
             DocumentReference documentReference = db.collection("notebook").document(mNoteId);
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -79,7 +108,8 @@ public class AddNoteActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
-                            mEditText.setText(String.valueOf(document.get("description")));
+                            mDescriptionText.setText(String.valueOf(document.get("description")));
+                            mTitleText.setText(String.valueOf(document.get("title")));
                             Log.d(TAG, "DocumentSnapshot data: " + document.getData());
                         } else {
                             Log.d(TAG, "No such document");
@@ -108,9 +138,11 @@ public class AddNoteActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        mEditText = findViewById(R.id.editTextTaskDescription);
+        mDescriptionText = findViewById(R.id.editTextNoteDescription);
+        mTitleText = findViewById(R.id.editTextNoteTitle);
         mSaveButton = findViewById(R.id.saveButton);
         mUploadButton = findViewById(R.id.addImageButton);
+        mAudioUploadButton = findViewById(R.id.uploadAudioButton);
         mImageView = findViewById(R.id.imageView);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,24 +156,75 @@ public class AddNoteActivity extends AppCompatActivity {
                 onUploadButtonClicked();
             }
         });
+        mAudioUploadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAudioUploadButtonClicked();
+            }
+        });
+
+        // Set up audio recording buttons programatically
+        audioFileName = getExternalCacheDir().getAbsolutePath();
+        audioFileName += "/" + mNoteId + ".3gp";
+        ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
+        LinearLayout recordAndPlayButtons = findViewById(R.id.recordAndPlayButtons);
+        recordButton = new RecordButton(this);
+        recordAndPlayButtons.addView(recordButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        playButton = new PlayButton(this);
+        recordAndPlayButtons.addView(playButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
     }
 
     private void onSaveButtonClicked() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        String description = mEditText.getText().toString();
+        String description = mDescriptionText.getText().toString();
+        String title = mTitleText.getText().toString();
         Date date = new Date();
 
         if(mNoteId.equals("")) {
-            final Note note = new Note(account.getEmail(), description, date);
+            final Note note = new Note(account.getEmail(), title, description, date);
             CollectionReference notebookRef = db.collection("notebook");
             notebookRef.add(note);
             Toast.makeText(this, "Note added", Toast.LENGTH_SHORT).show();
         } else {
             DocumentReference noteRef = db.collection("notebook").document(mNoteId);
 
-            //TODO update date
-            noteRef
-                    .update("description", description)
+            noteRef.update("description", description)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error updating document", e);
+                        }
+                    });
+
+            noteRef.update("title", title)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error updating document", e);
+                        }
+                    });
+
+            noteRef.update("updatedAt", date)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
@@ -162,6 +245,25 @@ public class AddNoteActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, 0);
+    }
+
+    private void onAudioUploadButtonClicked() {
+        Uri recordingUri = Uri.fromFile(new File(audioFileName));
+
+        StorageReference recordingsRef = storage.getReference().child("recordings/" + mNoteId);
+        UploadTask uploadTask = recordingsRef.putFile(recordingUri);
+
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.v(TAG, "Failure: " + exception);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.v(TAG, "Success: " + taskSnapshot.getMetadata());
+            }
+        });
     }
 
     @Override
@@ -194,6 +296,119 @@ public class AddNoteActivity extends AppCompatActivity {
                     Log.v(TAG, "Success: " + taskSnapshot.getMetadata());
                 }
             });
+        }
+    }
+
+    // Audio Recording Code
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) finish();
+
+    }
+
+    private void onRecord(boolean start) {
+        if (start) {
+            startRecording();
+        } else {
+            stopRecording();
+        }
+    }
+
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying() {
+        player = new MediaPlayer();
+        try {
+            player.setDataSource(audioFileName);
+            player.prepare();
+            player.start();
+        } catch (IOException e) {
+            Log.e(TAG, "prepare() failed");
+        }
+    }
+
+    private void stopPlaying() {
+        player.release();
+        player = null;
+    }
+
+    private void startRecording() {
+        recorder = new MediaRecorder();
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setOutputFile(audioFileName);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            Log.e(TAG, "prepare() failed");
+        }
+
+        recorder.start();
+    }
+
+    private void stopRecording() {
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+    }
+
+    class RecordButton extends android.support.v7.widget.AppCompatButton {
+        boolean mStartRecording = true;
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onRecord(mStartRecording);
+                if (mStartRecording) {
+                    setText("Stop recording");
+                } else {
+                    setText("Start recording");
+                }
+                mStartRecording = !mStartRecording;
+            }
+        };
+
+        public RecordButton(Context ctx) {
+            super(ctx);
+            setText("Start recording");
+            setOnClickListener(clicker);
+            setWidth(450);
+        }
+    }
+
+    class PlayButton extends android.support.v7.widget.AppCompatButton {
+        boolean mStartPlaying = true;
+
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                onPlay(mStartPlaying);
+                if (mStartPlaying) {
+                    setText("Stop playing");
+                } else {
+                    setText("Start playing");
+                }
+                mStartPlaying = !mStartPlaying;
+            }
+        };
+
+        public PlayButton(Context ctx) {
+            super(ctx);
+            setText("Start playing");
+            setOnClickListener(clicker);
+            setWidth(500);
         }
     }
 }

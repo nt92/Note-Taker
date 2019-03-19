@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
         Query query = noteRef.whereEqualTo("user", account.getEmail());
 
+        //TODO query in descending order
         FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
                 .setQuery(query, Note.class)
                 .build();
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                mAdapter.deleteItem(viewHolder.getAdapterPosition());
+//                mAdapter.deleteItem(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(mRecyclerView);
 

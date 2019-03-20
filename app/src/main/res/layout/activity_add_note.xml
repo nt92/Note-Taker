@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-    This vertical linear layout contains all the views in the AddNoteActivity code.
-    This includes an EditText to adtaskEntrytask description, and buttons to select a priority
--->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -14,7 +11,6 @@
     android:paddingStart="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <!-- EditText for getttaskEntrytask description input -->
 
     <EditText
         android:id="@+id/editTextNoteTitle"
@@ -58,7 +54,6 @@
             android:enabled="false"
             android:text="@string/upload_button"
             android:textColor="@android:color/primary_text_dark" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -72,22 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/recordButton"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:text="Record"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/playButton"
-                android:layout_width="75dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Play"
-                android:visibility="gone" />
-
         </LinearLayout>
 
         <Button
@@ -96,8 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:enabled="false"
-            android:text="Upload Recording" />
-
+            android:text="@string/upload_recording" />
     </LinearLayout>
 
     <Button
@@ -109,7 +87,4 @@
         android:background="@color/colorPrimary"
         android:text="@string/add_button"
         android:textColor="@android:color/primary_text_dark" />
-
-    <!-- Add button -->
-
 </LinearLayout>

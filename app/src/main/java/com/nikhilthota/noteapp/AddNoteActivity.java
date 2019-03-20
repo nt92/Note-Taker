@@ -54,6 +54,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 
@@ -63,7 +64,6 @@ public class AddNoteActivity extends AppCompatActivity {
     static final String TAG = AddNoteActivity.class.getSimpleName();
     String mNoteId = "";
 
-    //TODO make edit text larger and more dynamic
     EditText mTitleText;
     EditText mDescriptionText;
     Button mSaveButton;
@@ -134,6 +134,30 @@ public class AddNoteActivity extends AppCompatActivity {
                     Log.v(TAG, "Failure: " + e);
                 }
             });
+
+            // Get voice memo from existing document if not already cached
+            final File audioFile = new File(audioFileName);
+            if(!audioFile.exists()) {
+                storage.getReference().child("recordings/" + mNoteId)
+                        .getBytes(1024 * 1024)
+                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                try {
+                                    audioFile.createNewFile();
+                                    writeBytesToFile(bytes, audioFile);
+                                } catch (IOException e) {
+                                    Log.e(TAG, e.getMessage());
+                                    e.printStackTrace();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.v(TAG, "Failure: " + e);
+                    }
+                });
+            }
         }
     }
 
@@ -196,6 +220,7 @@ public class AddNoteActivity extends AppCompatActivity {
         } else {
             DocumentReference noteRef = db.collection("notebook").document(mNoteId);
 
+            // Update all fields on save button press
             noteRef.update("description", description)
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -310,6 +335,16 @@ public class AddNoteActivity extends AppCompatActivity {
         }
         if (!permissionToRecordAccepted ) finish();
 
+    }
+
+    private void writeBytesToFile(byte[] bFile, File fileDest) {
+        try {
+            FileOutputStream fOut = new FileOutputStream(fileDest);
+            fOut.write(bFile);
+            fOut.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void onRecord(boolean start) {

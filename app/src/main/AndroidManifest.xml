@@ -24,7 +24,7 @@
         <activity android:name="com.nikhilthota.noteapp.MainActivity" />
         <activity
             android:name="com.nikhilthota.noteapp.AddNoteActivity"
-            android:label="@string/add_task_activity_name" />
+            android:label="@string/add_note_activity_name" />
     </application>
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

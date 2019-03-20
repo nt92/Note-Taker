@@ -3,32 +3,24 @@ package com.nikhilthota.noteapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Constant for logging
     private static final String TAG = MainActivity.class.getSimpleName();
     private NoteAdapter mAdapter;
 
@@ -62,18 +54,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpRecyclerView() {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        Query query = noteRef.whereEqualTo("user", account.getEmail());
+        Query query = noteRef.whereEqualTo("user", account.getEmail()).orderBy("updatedAt", Query.Direction.DESCENDING);
 
-        //TODO query in descending order
         FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
                 .setQuery(query, Note.class)
                 .build();
 
         mAdapter = new NoteAdapter(options);
 
-        RecyclerView mRecyclerView = findViewById(R.id.recyclerViewTasks);
+        RecyclerView mRecyclerView = findViewById(R.id.recyclerViewNotes);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mRecyclerView.getContext(), DividerItemDecoration.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
@@ -87,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                mAdapter.deleteItem(viewHolder.getAdapterPosition());
+                mAdapter.deleteItem(viewHolder.getAdapterPosition());
             }
         }).attachToRecyclerView(mRecyclerView);
 

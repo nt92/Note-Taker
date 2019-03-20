@@ -16,7 +16,6 @@
 
 package com.nikhilthota.noteapp;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,21 +28,14 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 
-/**
- * This NoteAdapter creates and binds ViewHolders, that hold the description and priority of a note,
- * to a RecyclerView to efficiently display data.
- */
 public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.NoteHolder> {
 
-    // Constant for date format
     private static final String DATE_FORMAT = "dd/MM/yyyy";
-    private OnItemClickListener listener;
-
-    // Date formatter
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
+
+    private OnItemClickListener listener;
 
     NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options) {
         super(options);
@@ -53,6 +45,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
     protected void onBindViewHolder(@NonNull NoteHolder holder, int position, @NonNull Note note) {
         String updatedAt = dateFormat.format(note.getUpdatedAt());
 
+        holder.noteTitleView.setText(note.getTitle());
         holder.noteDescriptionView.setText(note.getDescription());
         holder.updatedAtView.setText(updatedAt);
     }
@@ -72,15 +65,16 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
     // Inner class for creating ViewHolders
     class NoteHolder extends RecyclerView.ViewHolder {
 
-        // Class variables for the Note description and priority TextViews
+        TextView noteTitleView;
         TextView noteDescriptionView;
         TextView updatedAtView;
 
         NoteHolder(View itemView) {
             super(itemView);
 
-            noteDescriptionView = itemView.findViewById(R.id.taskDescription);
-            updatedAtView = itemView.findViewById(R.id.taskUpdatedAt);
+            noteTitleView = itemView.findViewById(R.id.noteTitle);
+            noteDescriptionView = itemView.findViewById(R.id.noteDescription);
+            updatedAtView = itemView.findViewById(R.id.noteUpdatedAt);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

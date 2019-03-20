@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Notes</string>
     <string name="main_activity_name">All Notes</string>
-    <string name="add_task_activity_name">Create and Edit a Note</string>
+    <string name="add_note_activity_name">Create and Edit a Note</string>
 
     <string name="edit_note_description">Enter your note&#8230;</string>
     <string name="edit_note_title">Title your note&#8230;</string>
@@ -22,5 +22,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="upload_recording">Upload Recording</string>
 
 </resources>
